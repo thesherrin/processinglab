@@ -29,22 +29,29 @@ int minutes =0;
 //draw properties
 int markerSize = 3; //radius of marker
 int markerAlpha = 50; //alpha value for marker
-color fillBronx = color(255,0,0);
-color fillManhattan = color(0,0,255);
-color fillStaten = color(255,0,255);
-color fillBrooklyn = color(0,255,0);
-color fillQueens = color(255,255,0);
+color fillBronx = color(255,200,200);
+color fillManhattan = color(210,200,255);
+color fillStaten = color(255,200,255);
+color fillBrooklyn = color(200,255,200);
+color fillQueens = color(255,255,200);
 color fillOther = color(255,255,255);
-int fontSize = 40;
+int fontSize = 30;
+int fontSizeLegend = 15;
 
+//Legend Defaults
+  int legendLeft = 60;
+  int legendLeading = 28;
+  int legendTop = 170;
+  int legendAlpha = 180;
 
 void setup() {
   frameRate(0.5);
   size(canvasWidth, canvasHeight);
-  //baseMap = loadImage(baseMapImage);
-  //noLoop();
+
+  
   smooth(); //anti aliases better
   textSize(fontSize); //Set Text Size;
+  textAlign(CENTER); 
   csv = loadStrings("NYPD_Motor_Vehicle_Collisions_2014-old.csv");
   myData = new String[csv.length][fieldLength];
   myDataMap = new float[csv.length][2];
@@ -73,19 +80,35 @@ void setup() {
  
 }
 
-void draw() {
-  if (hour < 24) {
-//if (hour==0 && minutes==0){
-   background(0);
-//}
-    // if (minutes==0){
-    //image(baseMap, 0, 0, width, height);
-    // }
-    fill(0);
-    rect(0, 0, 150, 150);
-    fill(255);
+void chrome()
+{
+  //Static features - legends/controls
+  //Legend
 
-    text(hour+":00 - "+hour+":59" , 50, 100);
+  textSize(fontSizeLegend);
+  textAlign(LEFT);
+  fill(fillManhattan, legendAlpha);
+  text("Manhattan", legendLeft,(legendTop+ legendLeading * 1));
+  fill(fillBronx, legendAlpha);
+  text("Bronx", legendLeft, (legendTop + legendLeading * 0));
+  fill(fillQueens, legendAlpha);
+  text("Queens", legendLeft, (legendTop + legendLeading *2));
+  fill(fillStaten, legendAlpha);
+  text("Staten Island", legendLeft, (legendTop + legendLeading*4));
+  fill(fillBrooklyn, legendAlpha);
+  text("Brooklyn", legendLeft, (legendTop + legendLeading*3));
+  textAlign(CENTER); //Reset
+  textSize(fontSize);//Reset
+}
+
+
+void draw() {
+    background(0);
+    chrome();
+  if (hour < 24) {
+    fill(230);
+    textAlign(LEFT);
+    text("Collisions between\n"+ hour+":00 & "+(hour+1)+":00" , legendLeft, 80);
     //Highlighted data
     int counter = 0;
     for (int i=0; i<myData.length; i++) {
@@ -119,13 +142,7 @@ void draw() {
         counter ++;
       }
     }
-    //println(counter);
-//
-//    minutes++;
-//    if (minutes==60) {
-//      minutes=0;
-//      hour++;
-//    }
+
     hour++;
     if (hour == 24) {
       hour=0; 
